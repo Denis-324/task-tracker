@@ -15,10 +15,13 @@ import {
   removePrioritiesAction as removePriorities,
   setAssignToMeAction as setAssignToMe,
   removeAssignToMeAction as removeAssignToMe,
+  resetFiltersAction as resetFilters,
+  setFiltersFromLocalStorageAction as setFiltersFromLocalStorage,
+  setAllFiltersAction as setAllFilters,
 } from './actions';
 import { FilterReducerType } from './types';
 
-const initialState: FilterReducerType = {
+export const initialState: FilterReducerType = {
   filters: {},
   status: [
     statusesId.created,
@@ -46,5 +49,8 @@ export const filterSlice = createSlice({
     removePriorities,
     setAssignToMe,
     removeAssignToMe,
+    resetFilters,
+    setFiltersFromLocalStorage,
+    setAllFilters,
   },
 });

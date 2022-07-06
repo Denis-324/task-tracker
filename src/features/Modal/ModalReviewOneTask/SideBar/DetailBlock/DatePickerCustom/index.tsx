@@ -49,23 +49,41 @@ export const DatePickerCustom: React.FC<DatePickerCustomProps> = (props) => {
   return (
     <Spin spinning={status === 'loading'}>
       <DatePicker
+        inputReadOnly
         onChange={changeTimeStop}
         disabled={disabledDatePic()}
         disabledDate={disabledDate}
+        disabledTime={disabledDateTime}
         color={changeColor(stopDate)}
         locale={locale}
         format="D MMM YYYY, HH:mm"
         showTime
         onOk={isPressEnter}
         defaultValue={stopDate ? moment(stopDate, 'YYYY MM DD, HH:mm') : undefined}
-        placeholder="Введите дату"
+        placeholder="Выберете дату"
       />
     </Spin>
   );
 };
 
 const disabledDate: RangePickerProps['disabledDate'] = (current) =>
-  current && current < moment().endOf('day');
+  current.isBefore(moment().subtract(1, 'day'));
+
+const range = (start: number, end: number) => {
+  const result = [];
+  for (let i = start; i < end; i += 1) {
+    result.push(i);
+  }
+  return result;
+};
+
+const disabledDateTime = () => {
+  const date = new Date();
+  const hours = date.getHours();
+  return {
+    disabledHours: () => range(0, 24).splice(0, hours + 1),
+  };
+};
 
 const DatePicker = styled((props) => <DatePickerAnt {...props} />)`
   .ant-picker-input {

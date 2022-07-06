@@ -48,6 +48,7 @@ export const RejectedList = () => {
             showTotal: (total: number, range: number[]) => createShowTotal(total, range, status),
             pageSize,
             onChange: (page: number) => {
+              ref.current?.scrollIntoView();
               dispatch(RejectedListEffects.fetchAll({ page }));
             },
             total: itemsTotal,

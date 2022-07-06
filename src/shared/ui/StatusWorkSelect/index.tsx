@@ -49,8 +49,19 @@ export const StatusWorkSelect: React.FC<StatusWorkSelectPropsType> = (props) => 
     }
     console.log(obj);
   };
-  const disabledStatuses2 = () =>
-    roleObs.map((el) => el.id).includes(userId) || !roleId.includes(userId);
+  const disabledStatuses2 = () => {
+    if (
+      roleObs.map((el) => el.id).includes(userId) ||
+      !roleId.includes(userId) ||
+      roleEx.map((el) => el.id).includes(userId) ||
+      (roleRes.map((el) => el.id).includes(userId) &&
+        (name === 'Не выполнена' || name === 'Выполнена' || name === 'Отклонена'))
+    ) {
+      return true;
+    }
+
+    return false;
+  };
 
   const disabledStatuses = (label: string) => {
     if (roleAth.length) {
@@ -62,25 +73,12 @@ export const StatusWorkSelect: React.FC<StatusWorkSelectPropsType> = (props) => 
       }
 
       if (
-        (label === 'В работе' || label === 'Создана') &&
-        task_status_id === StatusesTypes.statusesId.completed
-      ) {
-        return true;
-      }
-
-      if (
-        (label === 'Выполнена' || label === 'В работе' || label === 'Создана') &&
-        task_status_id === StatusesTypes.statusesId.notCompleted
-      ) {
-        return true;
-      }
-
-      if (
         (label === 'Не выполнена' ||
+          label === 'Отклонена' ||
           label === 'Выполнена' ||
           label === 'В работе' ||
           label === 'Создана') &&
-        task_status_id === StatusesTypes.statusesId.rejected
+        task_status_id === StatusesTypes.statusesId.completed
       ) {
         return true;
       }

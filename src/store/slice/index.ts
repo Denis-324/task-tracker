@@ -129,4 +129,5 @@ export {
   reducer as filterReducer,
   actions as FilterActions,
   Selectors as FilterSelectors,
+  Types as FilterTypes,
 } from './filter';

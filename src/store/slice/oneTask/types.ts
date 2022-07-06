@@ -5,11 +5,11 @@ export type ReducerType = {
   data: Types.TaskCardDetailType;
   status: ReducerStatusType;
   checkListStatus: ReducerStatusType;
+  titleStatus: string;
   tagStatus: ReducerStatusType;
   error: string;
   currentTaskId: string;
 };
-
 export type OneTaskFetchResponseType = {
   data: Types.TaskCardDetailType;
 };

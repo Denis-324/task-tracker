@@ -1,4 +1,4 @@
-import { Skeleton, Spin } from 'antd';
+import { Spin } from 'antd';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { OneTaskSelectors, Types } from 'store';

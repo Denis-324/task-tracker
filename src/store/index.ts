@@ -69,4 +69,5 @@ export {
   countSubscribesTypes,
   FilterActions,
   FilterSelectors,
+  FilterTypes,
 } from './slice';

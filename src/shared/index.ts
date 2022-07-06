@@ -22,6 +22,7 @@ export {
   ErrorBoundary,
   HeaderCard,
   MenuArrowButton,
+  Filters,
 } from './ui';
 
 export { makeRequest } from './api';

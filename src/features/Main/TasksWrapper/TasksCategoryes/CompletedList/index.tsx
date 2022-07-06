@@ -48,6 +48,7 @@ export const CompletedList = () => {
             showTotal: (total: number, range: number[]) => createShowTotal(total, range, status),
             pageSize,
             onChange: (page: number) => {
+              ref.current?.scrollIntoView();
               dispatch(CompletedListEffects.fetchAll({ page }));
             },
             total: itemsTotal,

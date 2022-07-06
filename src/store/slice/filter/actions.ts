@@ -1,4 +1,5 @@
 import { PrioritiesTypes, StatusesTypes } from 'store';
+import { initialState } from './slice';
 import { FilterReducerType } from './types';
 
 export const setSearchAction = (
@@ -95,3 +96,13 @@ export const removeAssignToMeAction = ({
   status,
   filters: { ...rest },
 });
+
+export const resetFiltersAction = () => initialState;
+
+export const setFiltersFromLocalStorageAction = () =>
+  JSON.parse(localStorage.getItem('filters') ?? JSON.stringify(initialState));
+
+export const setAllFiltersAction = (
+  _: FilterReducerType,
+  action: { payload: FilterReducerType; type: string },
+) => action.payload;

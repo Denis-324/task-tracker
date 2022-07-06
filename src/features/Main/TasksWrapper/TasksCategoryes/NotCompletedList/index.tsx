@@ -50,6 +50,7 @@ export const NotCompletedList = () => {
             showTotal: (total: number, range: number[]) => createShowTotal(total, range, status),
             pageSize,
             onChange: (page: number) => {
+              ref.current?.scrollIntoView();
               dispatch(NotCompletedListEffects.fetchAll({ page }));
             },
             total: itemsTotal,

@@ -15,10 +15,11 @@ type TagsGroupProps = {
   taskId: string;
   taskTags: TagsTypes.TagType[];
   checkRoles: { id: string; isAuthor: boolean; nameRole: string }[];
+  collapsable?: boolean;
 };
 
 export const TagsGroup: React.FC<TagsGroupProps> = (props) => {
-  const { taskId, taskTags, checkRoles } = props;
+  const { taskId, taskTags, checkRoles, collapsable } = props;
   const dispatch = useDispatch();
   const [editedTag, setEditedTag] = useState('');
 
@@ -55,126 +56,141 @@ export const TagsGroup: React.FC<TagsGroupProps> = (props) => {
   };
 
   return (
-    <>
-      <DesktopDis dis={disabledClose()}>
-        <Desktop dis={disabledClose()}>
-          {taskTags.slice(0, 3).map((tag) => (
-            <Tag
-              key={tag.task_tag_id}
-              color={tag.color}
-              closable={disabledClose()}
-              onClick={(e) => onTagClickHandler(e, tag.task_tag_id)}
-              onClose={() => unAssignTag(tag.task_tag_id)}
-              onMouseEnter={() => setArrowColor(tag.color)}
-              onMouseLeave={resetArrowColor}
-            >
-              <Paragraph
-                color={TagsBorderColors[tag.color]}
-                ellipsis={{ tooltip: <Tag color={tag.color}>
-{tag.name}
-                                     </Tag>,
-                rows: 1 }}
-              >
-                {tag.name}
-              </Paragraph>
-            </Tag>
-          ))}
-
-          {taskTags.length > 3 ? (
-            <Popover
-              placement="bottom"
-              visible={editedTag ? false : assignTagVisible || undefined}
-              mouseLeaveDelay={0.5}
-              overlayInnerStyle={{ borderRadius: '12px' }}
-              trigger={['hover', 'click']}
-              content={
-                <Popup>
-                  {taskTags.slice(3).map((tag) => (
-                    <Tag
-                      key={tag.task_tag_id}
-                      color={tag.color}
-                      closable
-                      onClick={(e) => onTagClickHandler(e, tag.task_tag_id)}
-                      onClose={() => unAssignTag(tag.task_tag_id)}
-                    >
-                      {tag.name}
-                    </Tag>
-                  ))}
-                  <Popover
-                    destroyTooltipOnHide
-                    visible={assignTagVisible}
-                    placement="bottom"
-                    overlayInnerStyle={{ borderRadius: '12px' }}
-                    trigger="click"
-                    onVisibleChange={(visible) => {
-                      if (!visible) setAssignTagVisible(undefined);
-                    }}
-                    content={
-                      <TagAssign
-                        taskId={taskId}
-                        usedTags={taskTags}
-                        setParentVisible={setAssignTagVisible}
-                      />
-                    }
-                  >
-                    <Tag color="default" onClick={() => setAssignTagVisible((prev) => !prev)}>
-                      +
-                    </Tag>
-                  </Popover>
-                </Popup>
-              }
-            >
-              <More>
-{`+${taskTags.length - 3}`}
-              </More>
-            </Popover>
-          ) : (
-            <Popover
-              destroyTooltipOnHide
-              visible={assignTagVisible}
-              placement="bottom"
-              overlayInnerStyle={{ borderRadius: '12px' }}
-              trigger="click"
-              onVisibleChange={(visible) => {
-                if (!visible) setAssignTagVisible(undefined);
-              }}
-              content={
-                <TagAssign
-                  taskId={taskId}
-                  usedTags={taskTags}
-                  setParentVisible={setAssignTagVisible}
-                />
-              }
-            >
-              <Tag color="default" onClick={() => setAssignTagVisible((prev) => !prev)}>
-                {taskTags.length ? '+' : '+ Добавить тег'}
-              </Tag>
-            </Popover>
-          )}
-
-          <Modal
-            title="Редактирование тега"
-            visible={!!editedTag}
-            footer={null}
-            centered
-            destroyOnClose
-            onCancel={modalCancelHandler}
-          >
-            <TagCreate taskId={taskId} tagId={editedTag} setEditedTag={setEditedTag} />
-          </Modal>
-        </Desktop>
-      </DesktopDis>
-      <Mobile>
+    <Wrap dis={disabledClose()}>
+      <Desktop dis={disabledClose()}>
         {taskTags.slice(0, 3).map((tag) => (
-          <Tag key={tag.task_tag_id} color={tag.color} />
+          <Tag
+            mCollapsable={collapsable}
+            key={tag.task_tag_id}
+            color={tag.color}
+            closable={disabledClose()}
+            onClick={(e) => onTagClickHandler(e, tag.task_tag_id)}
+            onClose={() => unAssignTag(tag.task_tag_id)}
+            onMouseEnter={() => setArrowColor(tag.color)}
+            onMouseLeave={resetArrowColor}
+          >
+            <Paragraph
+              color={TagsBorderColors[tag.color]}
+              ellipsis={{ tooltip: <Tag color={tag.color}>
+{tag.name}
+                                   </Tag>,
+              rows: 1 }}
+            >
+              {tag.name}
+            </Paragraph>
+          </Tag>
         ))}
-        {taskTags.length > 3 && <More>
+
+        {taskTags.length > 3 ? (
+          <Popover
+            placement="bottom"
+            visible={editedTag ? false : assignTagVisible || undefined}
+            mouseLeaveDelay={0.5}
+            overlayInnerStyle={{ borderRadius: '12px' }}
+            trigger={collapsable ? [] : ['hover', 'click']}
+            content={
+              <Popup>
+                {taskTags.slice(3).map((tag) => (
+                  <Tag
+                    key={tag.task_tag_id}
+                    color={tag.color}
+                    closable
+                    onClick={(e) => onTagClickHandler(e, tag.task_tag_id)}
+                    onClose={() => unAssignTag(tag.task_tag_id)}
+                  >
+                    {tag.name}
+                  </Tag>
+                ))}
+                <Popover
+                  destroyTooltipOnHide
+                  visible={assignTagVisible}
+                  placement="bottom"
+                  overlayInnerStyle={{ borderRadius: '12px' }}
+                  trigger="click"
+                  onVisibleChange={(visible) => {
+                    if (!visible) setAssignTagVisible(undefined);
+                  }}
+                  content={
+                    <TagAssign
+                      taskId={taskId}
+                      usedTags={taskTags}
+                      setParentVisible={setAssignTagVisible}
+                    />
+                  }
+                >
+                  <Tag color="default" onClick={() => setAssignTagVisible((prev) => !prev)}>
+                    +
+                  </Tag>
+                </Popover>
+              </Popup>
+            }
+          >
+            <More>
 {`+${taskTags.length - 3}`}
-                                </More>}
-      </Mobile>
-    </>
+            </More>
+          </Popover>
+        ) : (
+          <Popover
+            destroyTooltipOnHide
+            visible={assignTagVisible}
+            placement="bottom"
+            overlayInnerStyle={{ borderRadius: '12px' }}
+            trigger="click"
+            onVisibleChange={(visible) => {
+              if (!visible) setAssignTagVisible(undefined);
+            }}
+            content={
+              <TagAssign
+                taskId={taskId}
+                usedTags={taskTags}
+                setParentVisible={setAssignTagVisible}
+              />
+            }
+          >
+            <Tag
+              mHidden={collapsable}
+              color="default"
+              onClick={() => setAssignTagVisible((prev) => !prev)}
+            >
+              {taskTags.length ? '+' : '+ Добавить тег'}
+            </Tag>
+          </Popover>
+        )}
+
+        <Modal
+          title="Редактирование тега"
+          visible={!!editedTag}
+          footer={null}
+          centered
+          destroyOnClose
+          onCancel={modalCancelHandler}
+        >
+          <TagCreate taskId={taskId} tagId={editedTag} setEditedTag={setEditedTag} />
+        </Modal>
+      </Desktop>
+    </Wrap>
   );
 };
+
+const Wrap = styled.div<{ dis: boolean }>`
+  ${({ dis }) => (dis ? '' : 'cursor: not-allowed; width: fit-content')}
+`;
+
+const Desktop = styled.div<{ dis: boolean }>`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  ${({ dis }) => (dis ? '' : 'pointer-events: none; opacity: 0.3;')}
+
+  > * {
+    max-width: calc(50% - 4px);
+  }
+
+  > :last-child {
+    max-width: none;
+  }
+`;
 
 const Paragraph = styled(ParagraphAntd)<{ color: string }>`
   color: ${(props) => props.color};
@@ -213,47 +229,4 @@ const Popup = styled.div`
   display: flex;
   flex-wrap: wrap;
   max-width: 280px;
-`;
-
-const Desktop = styled.div<{ dis: boolean }>`
-  display: flex;
-  flex-wrap: wrap;
-  ${({ dis }) => {
-    if (!dis) {
-      return css`
-        pointer-events: none;
-        opacity: 0.3;
-      `;
-    }
-    return null;
-  }}
-  > * {
-    max-width: calc(50% - 4px);
-  }
-  > :last-child {
-    max-width: none;
-  }
-  @media (max-width: 560px) {
-    display: none;
-  }
-`;
-
-const DesktopDis = styled.div<{ dis: boolean }>`
-  ${({ dis }) => {
-    if (!dis) {
-      return css`
-        cursor: not-allowed;
-      `;
-    }
-    return null;
-  }}
-`;
-
-const Mobile = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  @media (min-width: 560px) {
-    display: none;
-  }
 `;

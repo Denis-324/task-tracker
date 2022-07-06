@@ -6,6 +6,7 @@ import {
   AtWorkListEffects,
   CompletedListEffects,
   countSubscribesEffects,
+  FilterActions,
   FilterSelectors,
   IncomingListEffects,
   NotCompletedListEffects,
@@ -19,8 +20,8 @@ import {
   UsersEffects,
 } from 'store';
 import { Helpers } from 'shared';
-import { FilterWrapperComponent } from './FilterWrapper';
-import { MobileHeaderComponent } from './TasksWrapper/MobileHeader';
+import { FilterPanel } from './FilterPanel';
+import { MobileHeader } from './MobileHeader';
 import { TasksCategoryesComponent } from './TasksWrapper/TasksCategoryes';
 import { Header } from './TasksWrapper/Header';
 
@@ -30,6 +31,7 @@ export const Main = () => {
 
   const status = useSelector(OneTaskSelectors.oneTaskStatusSelector);
   const filters = useSelector(FilterSelectors.filters);
+  const allFilters = useSelector(FilterSelectors.allFilters);
 
   useEffect(() => {
     dispatch(countSubscribesEffects.fetchCountSubscribes());
@@ -39,6 +41,7 @@ export const Main = () => {
     dispatch(ProfileEffects.fetchUserProfile(userId));
     dispatch(TagsEffects.fetchTags());
     dispatch(UsersEffects.fetchUsers());
+    dispatch(FilterActions.setFiltersFromLocalStorage());
   }, []);
 
   useEffect(() => {
@@ -49,11 +52,15 @@ export const Main = () => {
     dispatch(RejectedListEffects.fetchAll({}));
   }, [filters]);
 
+  useEffect(() => {
+    localStorage.setItem('filters', JSON.stringify(allFilters));
+  }, [allFilters]);
+
   return (
     <Wrap>
-      <MobileHeaderComponent />
-      {/* visible at 425px */}
-      <FilterWrapperComponent />
+      <MobileHeader />
+      {/* visible at 645px */}
+      <FilterPanel />
       <TasksWrapper>
         <Content>
           <Header />
@@ -66,16 +73,19 @@ export const Main = () => {
     </Wrap>
   );
 };
+
 const Wrap = styled.div`
   display: grid;
   height: 100vh;
   grid-template-columns: 250px 1fr;
+
   button {
     border: none;
     background: none;
     cursor: pointer;
     padding: 0;
   }
+
   @media (max-width: 645px) {
     grid-template-columns: none;
     grid-template-rows: auto 1fr;
@@ -88,6 +98,7 @@ const TasksWrapper = styled.div`
   width: 100%;
   background: var(--color-grey100);
   overflow: auto;
+
   @media (max-width: 645px) {
     min-height: calc(100vh - 55px);
   }
@@ -99,6 +110,7 @@ const Content = styled.div`
   grid-template-rows: auto 1fr;
   row-gap: 30px;
   min-height: 100%;
+
   @media (max-width: 645px) {
     padding: 10px 10px 0;
     row-gap: 16px;

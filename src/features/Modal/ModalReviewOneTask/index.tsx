@@ -70,9 +70,10 @@ const Modal = styled(ModalAntd)`
 `;
 
 const WrapModal = styled.div`
+  width: 100% !important;
+  display: grid;
+
   @media (min-width: 940px) {
-    width: 100% !important;
-    display: grid;
     grid-template-columns: 60% 40%;
 
     .col-1 {
@@ -86,6 +87,7 @@ const WrapModal = styled.div`
       border-radius: 0px 16px 16px 0px;
     }
   }
+
   @media (max-width: 939px) {
     .col-2 {
       display: none;

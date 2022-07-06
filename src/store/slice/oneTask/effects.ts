@@ -1,6 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { makeRequest } from 'shared';
-// import { RootStateType } from 'store';
 import { OneTaskActions, HistoryEffects } from 'store';
 import {
   CheckListAssignResponseType,
@@ -8,23 +7,6 @@ import {
   CheckListResponseType,
   OneTaskFetchResponseType,
 } from './types';
-
-// export const fetchOneTask = createAsyncThunk(
-//   'oneTask/fetchOneTask',
-//   async (task_id: string, { rejectWithValue, dispatch }) => {
-
-//     try {
-//       const response = await makeRequest<OneTaskFetchResponseType>({
-//         url: `task/tasks/${data.taskID}/check-list-un-assign`,
-//         method: 'POST',
-//         data: data.body,
-//       });
-//       return response.data.data;
-//     } catch (e) {
-//       return rejectWithValue((e as Error).message);
-//     }
-//   },
-// );
 
 export const fetchOneTask = createAsyncThunk(
   'oneTask/fetchOneTask',
@@ -35,6 +17,50 @@ export const fetchOneTask = createAsyncThunk(
         url: `task/tasks/${taskID}`,
       });
       dispatch(HistoryEffects.fetchHistory(taskID));
+      return response.data.data;
+    } catch (e) {
+      return rejectWithValue((e as Error).message);
+    }
+  },
+);
+// Изменение заголовка задачи
+export const oneTaskTitleChange = createAsyncThunk(
+  'oneTask/oneTaskTitleChange',
+  async (
+    data: {
+      taskID: string;
+      body: { title: string };
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await makeRequest<OneTaskFetchResponseType>({
+        url: `task/tasks/${data.taskID}/title-change`,
+        method: 'POST',
+        data: data.body,
+      });
+      return response.data.data;
+    } catch (e) {
+      return rejectWithValue((e as Error).message);
+    }
+  },
+);
+// Изменение описания задачи
+export const oneTaskDescriptionChange = createAsyncThunk(
+  'oneTask/oneTaskDescriptionChange',
+  async (
+    data: {
+      taskID: string;
+      body: { description: string };
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await makeRequest<OneTaskFetchResponseType>({
+        url: `task/tasks/${data.taskID}/description-change`,
+        method: 'POST',
+        data: data.body,
+      });
       return response.data.data;
     } catch (e) {
       return rejectWithValue((e as Error).message);

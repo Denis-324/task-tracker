@@ -73,6 +73,7 @@ export const ContentCard: React.FC<ContentCardPropsType> = (props) => {
           checkRoles={checkRoles}
           taskTags={tags.map((tag) => tag.task_tag)}
           taskId={task_id}
+          collapsable
         />
       </div>
       <div className="col-8">

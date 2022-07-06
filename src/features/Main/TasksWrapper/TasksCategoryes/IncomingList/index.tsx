@@ -17,6 +17,7 @@ export const IncomingList = () => {
     page_current: pageCurrent,
   } = useSelector(IncomingListSelectors.pagination);
   const ref = useRef<HTMLDivElement>(null);
+
   const listData = useSelector(IncomingListSelectors.data);
   const status = useSelector(IncomingListSelectors.status);
   const sort = useSelector(IncomingListSelectors.sort);
@@ -47,6 +48,7 @@ export const IncomingList = () => {
             showTotal: (total: number, range: number[]) => createShowTotal(total, range, status),
             pageSize,
             onChange: (page: number) => {
+              ref.current?.scrollIntoView();
               dispatch(IncomingListEffects.fetchAll({ page }));
             },
             total: itemsTotal,

@@ -17,10 +17,10 @@ export const AtWorkList = () => {
     page_current: pageCurrent,
   } = useSelector(AtWorkListSelectors.pagination);
 
-  const ref = useRef<HTMLDivElement>(null);
   const listData = useSelector(AtWorkListSelectors.data);
   const status = useSelector(AtWorkListSelectors.status);
   const sort = useSelector(AtWorkListSelectors.sort);
+  const ref = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
 
@@ -28,6 +28,7 @@ export const AtWorkList = () => {
     dispatch(AtWorkListEffects.fetchAll({ per_page: size, page: 1 }));
     ref.current?.scrollIntoView();
   };
+
   return (
     <BoxWrap ref={ref}>
       <InboxWrap>
@@ -48,6 +49,7 @@ export const AtWorkList = () => {
             showTotal: (total: number, range: number[]) => createShowTotal(total, range, status),
             pageSize,
             onChange: (page: number) => {
+              ref.current?.scrollIntoView();
               dispatch(AtWorkListEffects.fetchAll({ page }));
             },
             total: itemsTotal,

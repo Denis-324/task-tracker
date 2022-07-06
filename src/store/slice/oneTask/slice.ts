@@ -12,6 +12,7 @@ import {
   checkListItemPositionChange,
   checkListItemRename,
   checkListTitleChange,
+  oneTaskTitleChange,
   unassignCheckListToTask,
   fetchOneTask,
   refetchOneTask,
@@ -26,6 +27,7 @@ export const initialState: ReducerType = {
   status: null,
   error: '',
   currentTaskId: '',
+  titleStatus: '',
 };
 
 export const oneTaskSlice = createSlice({
@@ -50,7 +52,23 @@ export const oneTaskSlice = createSlice({
       status: 'fail',
       error: action.payload as string,
     }));
-
+    // Изменение заголовка
+    builder.addCase(oneTaskTitleChange.pending, (state) => ({
+      ...state,
+      titleStatus: 'loading',
+    }));
+    builder.addCase(oneTaskTitleChange.fulfilled, (state, action) => ({
+      ...state,
+      titleStatus: 'success',
+      data: {
+        ...state.data,
+        title: action.payload.title,
+      },
+    }));
+    builder.addCase(oneTaskTitleChange.rejected, (state, action) => ({
+      ...state,
+      titleStatus: 'fail',
+    }));
     builder.addCase(refetchOneTask.pending, (state) => ({
       ...state,
       tagStatus: 'loading',
@@ -190,8 +208,9 @@ export const oneTaskSlice = createSlice({
           {
             ...state.data.check_lists[0],
             items: [
+              // eslint-disable-next-line no-confusing-arrow
               ...(state.data.check_lists[0].items ?? []).map((el) =>
-                (el.check_list_item_id === action.payload.check_list_item_id ? action.payload : el),
+                el.check_list_item_id === action.payload.check_list_item_id ? action.payload : el,
               ),
             ],
           },
@@ -219,8 +238,9 @@ export const oneTaskSlice = createSlice({
           {
             ...state.data.check_lists[0],
             items: [
+              // eslint-disable-next-line no-confusing-arrow
               ...(state.data.check_lists[0].items ?? []).map((el) =>
-                (el.check_list_item_id === action.payload.check_list_item_id ? action.payload : el),
+                el.check_list_item_id === action.payload.check_list_item_id ? action.payload : el,
               ),
             ],
           },
